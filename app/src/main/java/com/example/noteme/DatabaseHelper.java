@@ -39,13 +39,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Boolean insertNote(String title, String subtitle, String note, String color) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(TITLE_COL, title);
-        contentValues.put(SUBTITLE_COL, subtitle);
-        contentValues.put(NOTE_COL, note);
-        contentValues.put(COLOR_COL, color);
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        return result != -1;
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TITLE_COL, title);
+            contentValues.put(SUBTITLE_COL, subtitle);
+            contentValues.put(NOTE_COL, note);
+            contentValues.put(COLOR_COL, color);
+            long result = db.insert(TABLE_NAME, null, contentValues);
+            return result != -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

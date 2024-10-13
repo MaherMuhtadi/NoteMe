@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Objects;
+
 public class NewNote extends AppCompatActivity {
 
     @Override
@@ -29,7 +31,7 @@ public class NewNote extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.new_note_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(getString(R.string.new_note_activity_title));
@@ -43,30 +45,32 @@ public class NewNote extends AppCompatActivity {
     }
 
     public void saveNote(View v) {
-        DatabaseHelper db = new DatabaseHelper(this);
-        String title = ((EditText)findViewById(R.id.input_title)).getText().toString().trim();
-        String subtitle = ((EditText)findViewById(R.id.input_subtitle)).getText().toString().trim();
-        String note = ((EditText)findViewById(R.id.input_description)).getText().toString().trim();
-        String color = NoteColor.color;
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            db.insertNote(title, subtitle, note, color);
-            finish();
+        try (DatabaseHelper db = new DatabaseHelper(this)) {
+            String title = ((EditText)findViewById(R.id.input_title)).getText().toString().trim();
+            String subtitle = ((EditText)findViewById(R.id.input_subtitle)).getText().toString().trim();
+            String note = ((EditText)findViewById(R.id.input_description)).getText().toString().trim();
+            String color = NoteColor.color;
+
+            if (title.isEmpty()) {
+                Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            } else if (db.insertNote(title, subtitle, note, color)) {
+                finish();
+            } else {
+                Toast.makeText(this, "Could not save the note", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Handle the back arrow click event, e.g., finish the activity
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

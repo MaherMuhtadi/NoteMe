@@ -6,5 +6,4 @@
     <string name="subtitle_input_hint">Subtitle</string>
     <string name="description_input_hint">Note</string>
     <string name="save_button">Save</string>
-    <string name="discard_button">Discard</string>
 </resources>
