@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NoteMe</string>
+    <string name="new_note_activity_title">New Note</string>
+    <string name="add_new_note_button">Add New Note</string>
+    <string name="title_input_hint">Title</string>
+    <string name="subtitle_input_hint">Subtitle</string>
+    <string name="description_input_hint">Note</string>
+    <string name="save_button">Save</string>
+    <string name="discard_button">Discard</string>
+</resources>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewNote">
+
+    <include
+        layout="@layout/toolbar_layout"
+        android:id="@+id/new_note_toolbar"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
+
+    <LinearLayout
+        android:id="@+id/note_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/color_selection"
+        android:layout_below="@+id/new_note_toolbar"
+        android:layout_margin="16dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginBottom="-96dp"
+        android:background="@color/yellow"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/input_title"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:hint="@string/title_input_hint"
+            android:inputType="text"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/input_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:hint="@string/subtitle_input_hint"
+            android:inputType="text"
+            android:textStyle="bold|italic" />
+
+        <EditText
+            android:id="@+id/input_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/description_input_hint"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/color_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_above="@id/save_button"
+        android:layout_centerHorizontal="true">
+
+        <View
+            android:id="@+id/yellow_square"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@color/yellow"/>
+
+        <View
+            android:id="@+id/pink_square"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/pink"/>
+
+        <View
+            android:id="@+id/green_square"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@color/green"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/action_color"
+        android:onClick="saveNote"
+        android:text="@string/save_button"
+        android:textColor="@color/black"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
