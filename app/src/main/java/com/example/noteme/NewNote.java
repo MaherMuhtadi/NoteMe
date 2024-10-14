@@ -36,7 +36,7 @@ public class NewNote extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(getString(R.string.new_note_activity_title));
 
-        new NoteColor(this,
+        new NoteColorChanger(this,
                 findViewById(R.id.note_container),
                 findViewById(R.id.yellow_square),
                 findViewById(R.id.pink_square),
@@ -49,7 +49,7 @@ public class NewNote extends AppCompatActivity {
             String title = ((EditText)findViewById(R.id.input_title)).getText().toString().trim();
             String subtitle = ((EditText)findViewById(R.id.input_subtitle)).getText().toString().trim();
             String note = ((EditText)findViewById(R.id.input_description)).getText().toString().trim();
-            String color = NoteColor.color;
+            String color = NoteColorChanger.color;
 
             if (title.isEmpty()) {
                 Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();

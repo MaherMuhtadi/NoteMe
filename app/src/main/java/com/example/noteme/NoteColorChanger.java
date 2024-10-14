@@ -7,20 +7,30 @@ import android.widget.LinearLayout;
 
 import androidx.core.content.ContextCompat;
 
-public class NoteColor {
+public class NoteColorChanger {
 
     private final String YELLOW;
     private final String PINK;
     private final String GREEN;
     public static String color;
 
-    public NoteColor(Context context, LinearLayout container, View yellow_square, View pink_square, View green_square) {
+    public NoteColorChanger(Context context, LinearLayout container, View yellow_square, View pink_square, View green_square) {
+        this(context, container, yellow_square, pink_square, green_square, "");
+    }
+
+    public NoteColorChanger(Context context, LinearLayout container, View yellow_square, View pink_square, View green_square, String default_color) {
         YELLOW = getHexColor(context, R.color.yellow);
         PINK = getHexColor(context, R.color.pink);
         GREEN = getHexColor(context, R.color.green);
 
         // Default color
-        toggleSquare(YELLOW, yellow_square, pink_square, green_square, container);
+        if (default_color.equals(GREEN)) {
+            toggleSquare(GREEN, green_square, yellow_square, pink_square, container);
+        } else if (default_color.equals(PINK)) {
+            toggleSquare(PINK, pink_square, yellow_square, green_square, container);
+        } else {
+            toggleSquare(YELLOW, yellow_square, pink_square, green_square, container);
+        }
 
         // Set click listeners for each square
         yellow_square.setOnClickListener(v -> toggleSquare(YELLOW, yellow_square, pink_square, green_square, container));
