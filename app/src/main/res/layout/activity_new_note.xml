@@ -13,7 +13,7 @@
         app:navigationIcon="?attr/homeAsUpIndicator" />
 
     <LinearLayout
-        android:id="@+id/note_container"
+        android:id="@+id/new_note_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/color_selection"

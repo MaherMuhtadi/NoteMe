@@ -37,7 +37,7 @@ public class NewNote extends AppCompatActivity {
         toolbarTitle.setText(getString(R.string.new_note_activity_title));
 
         new NoteColorChanger(this,
-                findViewById(R.id.note_container),
+                findViewById(R.id.new_note_container),
                 findViewById(R.id.yellow_square),
                 findViewById(R.id.pink_square),
                 findViewById(R.id.green_square)
@@ -45,7 +45,7 @@ public class NewNote extends AppCompatActivity {
     }
 
     public void saveNote(View v) {
-        try (DatabaseHelper db = new DatabaseHelper(this)) {
+        try (DatabaseHelper db = DatabaseHelper.getInstance(this)) {
             String title = ((EditText)findViewById(R.id.input_title)).getText().toString().trim();
             String subtitle = ((EditText)findViewById(R.id.input_subtitle)).getText().toString().trim();
             String note = ((EditText)findViewById(R.id.input_description)).getText().toString().trim();
