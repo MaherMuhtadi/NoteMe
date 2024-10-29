@@ -50,10 +50,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public ArrayList<Note> searchNotes(String selection) {
+    public ArrayList<Note> getNotes() {
         ArrayList<Note> notesArray = new ArrayList<>();
         try (SQLiteDatabase db = this.getReadableDatabase()) {
-            Cursor result = db.rawQuery("SELECT " + selection + " FROM " + TABLE_NAME, null);
+            Cursor result = db.rawQuery("SELECT *" + " FROM " + TABLE_NAME, null);
             if (result.getCount() > 0) {
                 while (result.moveToNext()) {
                     int id = result.getInt(0);

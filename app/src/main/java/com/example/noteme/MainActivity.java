@@ -3,6 +3,7 @@ package com.example.noteme;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,11 +50,24 @@ public class MainActivity extends AppCompatActivity {
         toolbarTitle.setText(getString(R.string.app_name));
 
         loadNotes();
+
+        SearchView searchView = findViewById(R.id.search_bar);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return true;
+            }
+        });
     }
 
     private void loadNotes() {
         DatabaseHelper db = DatabaseHelper.getInstance(this);
-        ArrayList<Note> notesArray = db.searchNotes("*");
+        ArrayList<Note> notesArray = db.getNotes();
         adapter = new NotesAdapter(this, notesArray);
         RecyclerView rv = findViewById(R.id.recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));

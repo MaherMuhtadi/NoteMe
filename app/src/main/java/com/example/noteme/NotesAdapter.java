@@ -68,4 +68,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         notesArray.add(n);
         notifyItemInserted(notesArray.size()-1);
     }
+
+    public void filter(String query) {
+        ArrayList<Note> filteredList = new ArrayList<>();
+        if (query.isEmpty()) {
+            DatabaseHelper db = DatabaseHelper.getInstance(context);
+            filteredList.addAll(db.getNotes());
+        } else {
+            for (Note note : notesArray) {
+                if (note.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                        note.getSubtitle().toLowerCase().contains(query.toLowerCase()) ||
+                        note.getDescription().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(note);
+                }
+            }
+        }
+        notesArray.clear();
+        notesArray.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
 }
