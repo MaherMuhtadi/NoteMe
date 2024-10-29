@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Note newNote = (Note) result.getData().getSerializableExtra("new_note");
                     adapter.insert(newNote);
+                    Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
                 }
             }
     );
