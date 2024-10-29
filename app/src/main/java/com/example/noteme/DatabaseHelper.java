@@ -86,4 +86,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public int getLastId() {
+        int lastId = -1;
+        try (SQLiteDatabase db = this.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT seq AS last_id FROM sqlite_sequence WHERE name = " + TABLE_NAME, null)) {
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex("last_id");
+                if (columnIndex != -1) {
+                    lastId = cursor.getInt(columnIndex);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lastId;
+    }
 }

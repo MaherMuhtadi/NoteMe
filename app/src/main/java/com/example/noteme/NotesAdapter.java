@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
-    private Context context;
-    private ArrayList<Note> notesArray;
+    private final Context context;
+    private final ArrayList<Note> notesArray;
 
     public NotesAdapter(Context context, ArrayList<Note> notesArray) {
         this.context = context;
@@ -41,5 +41,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     @Override
     public int getItemCount() {
         return notesArray.size();
+    }
+
+    public void insert(Note n) {
+        notesArray.add(n);
+        notifyItemInserted(notesArray.size()-1);
     }
 }

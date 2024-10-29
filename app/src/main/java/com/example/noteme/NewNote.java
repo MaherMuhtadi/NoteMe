@@ -1,5 +1,6 @@
 package com.example.noteme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,11 @@ public class NewNote extends AppCompatActivity {
             if (title.isEmpty()) {
                 Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
             } else if (db.insertNote(title, subtitle, note, color)) {
+                int id = db.getLastId();
+                Note newNote = new Note(id, title, subtitle, note, color);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("new_note", newNote);
+                setResult(RESULT_OK, resultIntent);
                 finish();
             } else {
                 Toast.makeText(this, "Could not save the note", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,7 +19,18 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView rv;
+    public NotesAdapter adapter;
+
+    // Define the ActivityResultLauncher
+    private final ActivityResultLauncher<Intent> newNoteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Note newNote = (Note) result.getData().getSerializableExtra("new_note");
+                    adapter.insert(newNote);
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +46,15 @@ public class MainActivity extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(getString(R.string.app_name));
 
-        rv = findViewById(R.id.recycler_view);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        loadNotes();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         loadNotes();
     }
 
     private void loadNotes() {
         DatabaseHelper db = DatabaseHelper.getInstance(this);
         ArrayList<Note> notesArray = db.searchNotes("*");
-        NotesAdapter adapter = new NotesAdapter(this, notesArray);
+        adapter = new NotesAdapter(this, notesArray);
+        RecyclerView rv = findViewById(R.id.recycler_view);
+        rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
         if (notesArray.isEmpty()) {
             findViewById(R.id.no_notes_message).setVisibility(View.VISIBLE);
@@ -58,6 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchNewNoteActivity(View v) {
         Intent i = new Intent(this, NewNote.class);
-        startActivity(i);
+        newNoteLauncher.launch(i);
     }
 }
