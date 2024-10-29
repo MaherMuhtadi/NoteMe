@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<Note> searchNotes(String selection) {
         ArrayList<Note> notesArray = new ArrayList<>();
-        try (SQLiteDatabase db = this.getWritableDatabase()) {
+        try (SQLiteDatabase db = this.getReadableDatabase()) {
             Cursor result = db.rawQuery("SELECT " + selection + " FROM " + TABLE_NAME, null);
             if (result.getCount() > 0) {
                 while (result.moveToNext()) {
@@ -85,6 +85,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean delete(int id) {
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            db.delete(TABLE_NAME, ID_COL+"=?", new String[]{Integer.toString(id)});
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public int getLastId() {
