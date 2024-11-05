@@ -3,7 +3,7 @@ package com.example.noteme;
 import java.io.Serializable;
 
 public class Note implements Serializable {
-    private int id;
+    private final int id;
     private String title;
     private String subtitle;
     private String description;
@@ -19,10 +19,6 @@ public class Note implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {

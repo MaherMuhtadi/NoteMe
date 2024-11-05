@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NoteViewHolder extends RecyclerView.ViewHolder {
 
-    TextView title;
-    TextView subtitle;
-    TextView description;
-    ImageView deleteButton;
-    RelativeLayout container;
+    final TextView title;
+    final TextView subtitle;
+    final TextView description;
+    final ImageView deleteButton;
+    final RelativeLayout container;
 
     public NoteViewHolder(@NonNull View itemView) {
         super(itemView);

@@ -100,7 +100,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     public void filter(String query) {
         ArrayList<Note> filteredList = new ArrayList<>();
         if (query.isEmpty()) {
-            try (DatabaseHelper db = DatabaseHelper.getInstance(context);) {
+            try (DatabaseHelper db = DatabaseHelper.getInstance(context)) {
                 filteredList.addAll(db.getNotes());
             } catch (Exception e) {
                 Toast.makeText(context, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
