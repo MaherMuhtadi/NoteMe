@@ -47,7 +47,7 @@
         android:clickable="true"
         android:contentDescription="@string/add_new_note_button"
         android:focusable="true"
-        android:onClick="launchNewNoteActivity"
+        android:onClick="launchNoteEditorActivity"
         app:backgroundTint="@color/action_color"
         app:elevation="6dp"
         app:srcCompat="@drawable/ic_add" />

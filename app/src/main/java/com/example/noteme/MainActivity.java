@@ -29,11 +29,20 @@ public class MainActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Note newNote = (Note) result.getData().getSerializableExtra("new_note");
-                    adapter.insert(newNote);
-                    Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
+                    if (newNote != null) {
+                        adapter.insert(newNote);
+                        Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Note updatedNote = (Note) result.getData().getSerializableExtra("updated_note");
+                        if (updatedNote != null) {
+                            adapter.update(updatedNote);
+                            Toast.makeText(this, "Note updated successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
     );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +75,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNotes() {
-        DatabaseHelper db = DatabaseHelper.getInstance(this);
-        ArrayList<Note> notesArray = db.getNotes();
-        adapter = new NotesAdapter(this, notesArray, findViewById(R.id.no_notes_message));
-        RecyclerView rv = findViewById(R.id.recycler_view);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter);
+        try (DatabaseHelper db = DatabaseHelper.getInstance(this)) {
+            ArrayList<Note> notesArray = db.getNotes();
+            adapter = new NotesAdapter(this, notesArray, findViewById(R.id.no_notes_message));
+            RecyclerView rv = findViewById(R.id.recycler_view);
+            rv.setLayoutManager(new LinearLayoutManager(this));
+            rv.setAdapter(adapter);
+        } catch (Exception e) {
+            Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void launchNewNoteActivity(View v) {
-        Intent i = new Intent(this, NoteEditor.class);
-        noteEditorLauncher.launch(i);
+    public  ActivityResultLauncher<Intent> getNoteEditorLauncher() {
+        return noteEditorLauncher;
+    }
+
+    public void launchNoteEditorActivity(View v) {
+        Intent intent = new Intent(this, NoteEditor.class);
+        noteEditorLauncher.launch(intent);
     }
 }

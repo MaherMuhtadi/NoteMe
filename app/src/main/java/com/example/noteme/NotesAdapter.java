@@ -43,7 +43,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.description.setText(note.getDescription());
         holder.container.setBackgroundColor(Color.parseColor(note.getColor()));
         holder.deleteButton.setOnClickListener(view -> delete(note, holder));
+        holder.container.setOnClickListener(view -> launchNoteEditorActivity(note));
         toggleNoNotesMessage();
+    }
+
+    private void launchNoteEditorActivity(Note note) {
+        Intent intent = new Intent(context, NoteEditor.class);
+        intent.putExtra("is_new", false);
+        intent.putExtra("note", note);
+        ((MainActivity) context).getNoteEditorLauncher().launch(intent);
     }
 
     private void delete(Note note, NoteViewHolder holder) {
@@ -51,14 +59,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
                     .setTitle("Confirm Deletion")
                     .setMessage("Are you sure you want to delete this note?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        DatabaseHelper db = DatabaseHelper.getInstance(context);
-                        if (db.delete(note.getId())) {
-                            notesArray.remove(note);
-                            toggleNoNotesMessage();
-                            notifyItemRemoved(holder.getAdapterPosition());
-                            Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "Failed to delete the note.", Toast.LENGTH_SHORT).show();
+                        try (DatabaseHelper db = DatabaseHelper.getInstance(context)) {
+                            if (db.delete(note.getId())) {
+                                notesArray.remove(note);
+                                toggleNoNotesMessage();
+                                notifyItemRemoved(holder.getAdapterPosition());
+                                Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Failed to delete the note.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(context, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -75,11 +86,25 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         notifyItemInserted(notesArray.size()-1);
     }
 
+    public void update(Note n) {
+        for (int i = 0; i < notesArray.size(); i++) {
+            if (notesArray.get(i).getId() == n.getId()) {
+                notesArray.set(i, n);
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+
     public void filter(String query) {
         ArrayList<Note> filteredList = new ArrayList<>();
         if (query.isEmpty()) {
-            DatabaseHelper db = DatabaseHelper.getInstance(context);
-            filteredList.addAll(db.getNotes());
+            try (DatabaseHelper db = DatabaseHelper.getInstance(context);) {
+                filteredList.addAll(db.getNotes());
+            } catch (Exception e) {
+                Toast.makeText(context, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             for (Note note : notesArray) {
                 if (note.getTitle().toLowerCase().contains(query.toLowerCase()) ||
@@ -102,5 +127,4 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             noNotesMessage.setVisibility(View.INVISIBLE);
         }
     }
-
 }

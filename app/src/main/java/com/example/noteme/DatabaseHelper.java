@@ -87,6 +87,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean updateNote(int id, String title, String subtitle, String note, String color) {
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TITLE_COL, title);
+            contentValues.put(SUBTITLE_COL, subtitle);
+            contentValues.put(NOTE_COL, note);
+            contentValues.put(COLOR_COL, color);
+            int rowsAffected = db.update(TABLE_NAME, contentValues, ID_COL + " = ?", new String[]{String.valueOf(id)});
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean delete(int id) {
         try (SQLiteDatabase db = this.getWritableDatabase()) {
             db.delete(TABLE_NAME, ID_COL+"=?", new String[]{String.valueOf(id)});
