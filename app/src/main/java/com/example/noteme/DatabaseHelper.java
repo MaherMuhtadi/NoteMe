@@ -89,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean delete(int id) {
         try (SQLiteDatabase db = this.getWritableDatabase()) {
-            db.delete(TABLE_NAME, ID_COL+"=?", new String[]{Integer.toString(id)});
+            db.delete(TABLE_NAME, ID_COL+"=?", new String[]{String.valueOf(id)});
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int getLastId() {
         int lastId = -1;
         try (SQLiteDatabase db = this.getReadableDatabase();
-             Cursor cursor = db.rawQuery("SELECT seq AS last_id FROM sqlite_sequence WHERE name = " + TABLE_NAME, null)) {
+             Cursor cursor = db.rawQuery("SELECT seq AS last_id FROM sqlite_sequence WHERE name = ?", new String[]{TABLE_NAME})) {
             if (cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex("last_id");
                 if (columnIndex != -1) {
