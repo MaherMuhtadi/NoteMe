@@ -1,10 +1,12 @@
 package com.example.noteme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,10 +19,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private final Context context;
     private final ArrayList<Note> notesArray;
+    private final TextView noNotesMessage;
 
-    public NotesAdapter(Context context, ArrayList<Note> notesArray) {
+    public NotesAdapter(Context context, ArrayList<Note> notesArray, TextView noNotesMessage) {
         this.context = context;
         this.notesArray = notesArray;
+        this.noNotesMessage = noNotesMessage;
     }
 
     @NonNull
@@ -39,6 +43,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.description.setText(note.getDescription());
         holder.container.setBackgroundColor(Color.parseColor(note.getColor()));
         holder.deleteButton.setOnClickListener(view -> delete(note, holder));
+        toggleNoNotesMessage();
     }
 
     private void delete(Note note, NoteViewHolder holder) {
@@ -49,6 +54,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
                         DatabaseHelper db = DatabaseHelper.getInstance(context);
                         if (db.delete(note.getId())) {
                             notesArray.remove(note);
+                            toggleNoNotesMessage();
                             notifyItemRemoved(holder.getAdapterPosition());
                             Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -85,7 +91,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         }
         notesArray.clear();
         notesArray.addAll(filteredList);
+        toggleNoNotesMessage();
         notifyDataSetChanged();
+    }
+
+    public void toggleNoNotesMessage() {
+        if (notesArray.isEmpty()) {
+            noNotesMessage.setVisibility(View.VISIBLE);
+        } else {
+            noNotesMessage.setVisibility(View.INVISIBLE);
+        }
     }
 
 }

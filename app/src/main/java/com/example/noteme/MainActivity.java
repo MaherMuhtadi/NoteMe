@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public NotesAdapter adapter;
 
     // Define the ActivityResultLauncher
-    private final ActivityResultLauncher<Intent> newNoteLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> noteEditorLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -68,19 +68,14 @@ public class MainActivity extends AppCompatActivity {
     private void loadNotes() {
         DatabaseHelper db = DatabaseHelper.getInstance(this);
         ArrayList<Note> notesArray = db.getNotes();
-        adapter = new NotesAdapter(this, notesArray);
+        adapter = new NotesAdapter(this, notesArray, findViewById(R.id.no_notes_message));
         RecyclerView rv = findViewById(R.id.recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
-        if (notesArray.isEmpty()) {
-            findViewById(R.id.no_notes_message).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.no_notes_message).setVisibility(View.INVISIBLE);
-        }
     }
 
     public void launchNewNoteActivity(View v) {
-        Intent i = new Intent(this, NewNote.class);
-        newNoteLauncher.launch(i);
+        Intent i = new Intent(this, NoteEditor.class);
+        noteEditorLauncher.launch(i);
     }
 }
