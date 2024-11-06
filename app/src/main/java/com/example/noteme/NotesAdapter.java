@@ -99,20 +99,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     public void filter(String query) {
         ArrayList<Note> filteredList = new ArrayList<>();
-        if (query.isEmpty()) {
-            try (DatabaseHelper db = DatabaseHelper.getInstance(context)) {
+        try (DatabaseHelper db = DatabaseHelper.getInstance(context)) {
+            if (query.isEmpty()) {
                 filteredList.addAll(db.getNotes());
-            } catch (Exception e) {
-                Toast.makeText(context, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            for (Note note : notesArray) {
-                if (note.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                        note.getSubtitle().toLowerCase().contains(query.toLowerCase()) ||
-                        note.getDescription().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(note);
+            } else {
+                for (Note note : db.getNotes()) {
+                    if (note.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                            note.getSubtitle().toLowerCase().contains(query.toLowerCase()) ||
+                            note.getDescription().toLowerCase().contains(query.toLowerCase())) {
+                        filteredList.add(note);
+                    }
                 }
             }
+        } catch (Exception e) {
+            Toast.makeText(context, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         notesArray.clear();
         notesArray.addAll(filteredList);
